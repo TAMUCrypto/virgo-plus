@@ -1,6 +1,9 @@
+#undef NDEBUG
+#include "assert.h"
 #include "verifier.h"
 #include "inputCircuit.hpp"
 using namespace std;
+using namespace virgo;
 using std::max;
 
 layeredCircuit c;
@@ -11,6 +14,51 @@ FILE *ins_file, *wit_file;
 
 using std::cerr;
 using std::endl;
+
+void test_field_arithmetic() {
+	virgo::fieldElement a, b, c, d;
+
+	a = fieldElement::random();
+	b = fieldElement::random();
+	d = 0;
+
+	c = fieldElement::zero();
+	assert(c == 0);
+
+	c = fieldElement::one();
+	assert(c == 1);
+
+	c = a * b;
+	d = b * a;
+	assert(c == d);
+
+	cout << a << endl;
+	c = a.inv();
+	d = a * c;
+	assert(d == 1);
+
+	c = -1;
+	assert(c.isNegative());
+	c = c + 1;
+	assert(!c.isNegative());
+
+	c = a * a;
+	d = a.sqr();
+	assert(c == d);
+
+	for (int i = 1; i < 31; i++) {
+		c = fieldElement::getRootOfUnity(i);
+		for (int j = 1; j < i; j++) {
+			c = c.sqr();
+		}
+		assert(c == -1);
+	}
+
+	cout << "Field tests pass. " << endl;
+
+	fieldElement::self_speed_test_add(100);
+	fieldElement::self_speed_test_mult(100);
+}
 
 void DAG_to_layered() {
     vector<u64> in_deg(in_circuit_dag.size());          // in degree
@@ -145,6 +193,8 @@ void parse(ifstream &circuit_in);
 int main(int argc, char **argv) {
     ifstream circuit_in(argv[REL]);
     in_circuit_dag.clear();
+
+	test_field_arithmetic();
     parse(circuit_in);
     DAG_to_layered();
 

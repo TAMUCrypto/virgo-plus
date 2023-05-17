@@ -91,15 +91,15 @@ namespace virgo {
         static bool isCounting;
         static bool isSumchecking;
         static const unsigned long long mod;
-        static const int __max_order = 62;
+        static const int __max_order = 32;
 
         unsigned long long real;
         unsigned long long img;
 
-    protected:
         static double self_speed_test_mult(int repeat);
         static double self_speed_test_add(int repeat);
 
+    protected:
         static unsigned long long myMod(unsigned long long x);
         static unsigned long long mymult(const unsigned long long x, const unsigned long long y);
         static unsigned long long randomNumber();

@@ -36,9 +36,9 @@ namespace virgo {
             inv_rou = rou.inv();
             inv_n = fieldElement::fastPow(fieldElement((1 << lg_size)), fieldElement::mod - 2);
             fieldElement *x_arr = new fieldElement[1 << lg_size];
-            fieldElement *rot_mul = new fieldElement[62];
+            fieldElement *rot_mul = new fieldElement[fieldElement::__max_order];
             rot_mul[0] = inv_rou;
-            for (int i = 1; i < 62; ++i) {
+            for (int i = 1; i < fieldElement::__max_order; ++i) {
                 rot_mul[i] = rot_mul[i - 1] * rot_mul[i - 1];
             }
             int starting_depth = lg_size;
@@ -461,9 +461,9 @@ namespace virgo {
             int lg_size = mylog(size_poly);
             int starting_depth = lg_size;
             inv_rou = rou.inv();
-            fieldElement *rot_mul = new fieldElement[62];
+            fieldElement *rot_mul = new fieldElement[fieldElement::__max_order];
             rot_mul[0] = inv_rou;
-            for (int i = 1; i < 62; ++i) {
+            for (int i = 1; i < fieldElement::__max_order; ++i) {
                 rot_mul[i] = rot_mul[i - 1] * rot_mul[i - 1];
             }
             for (int dep = 0; dep < lg_size; ++dep) {

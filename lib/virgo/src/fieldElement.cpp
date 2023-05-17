@@ -3,9 +3,11 @@
 #include <chrono>
 #include <immintrin.h>
 
+using namespace std;
+
 namespace virgo {
-    const unsigned long long fieldElement::mod = 2305843009213693951LL;
-    const unsigned long long fieldElementPacked::mod = 2305843009213693951LL;
+    const unsigned long long fieldElement::mod = 0x7fffffffLL;
+    const unsigned long long fieldElementPacked::mod = 0x7fffffffLL;
     __m256i fieldElementPacked::packed_mod, fieldElementPacked::packed_mod_minus_one;
     bool fieldElement::initialized = false;
     int fieldElement::multCounter, fieldElement::addCounter;
@@ -157,7 +159,7 @@ namespace virgo {
     }
 
     bool fieldElement::isNegative() const {
-        return ((real >> 60) & 1) && img == 0;
+        return ((real >> 30) & 1) && img == 0;
     }
 
     unsigned char fieldElement::getBitWidth() const {
@@ -180,7 +182,7 @@ namespace virgo {
 
     __int128_t fieldElement::toint128() const {
         assert(img == 0);
-        if ((real >> 60) & 1) return i64(real) - mod;
+        if ((real >> 30) & 1) return i64(real) - mod;
         return real;
     }
 
@@ -204,7 +206,7 @@ namespace virgo {
     }
 
     fieldElement fieldElement::inv() const {
-        __uint128_t p = 2305843009213693951LL;
+        __uint128_t p = mod;
         return fastPow(*this, p * p - 2);
     }
 
@@ -236,11 +238,11 @@ namespace virgo {
 
     fieldElement fieldElement::getRootOfUnity(int log_order) {
         fieldElement rou;
-        //general root of unity, have log_order 2^61
-        rou.img = 1033321771269002680L;
-        rou.real = 2147483648L;
+        //general root of unity, have log_order 2^31
+        rou.img = 649932103L;
+        rou.real = 2018395493L;
 
-        assert(log_order <= 61);
+        assert(log_order < 32);
 
         for (int i = 0; i < __max_order - log_order; ++i)
             rou = rou * rou;
@@ -334,16 +336,16 @@ namespace virgo {
     }
 
     unsigned long long fieldElement::myMod(unsigned long long int x) {
-        return (x >> 61) + (x & mod);
+        return (x >> 31) + (x & mod);
     }
 
     unsigned long long fieldElement::mymult(const unsigned long long int x, const unsigned long long int y) {
         //return a value between [0, 2PRIME) = x * y mod PRIME
-        /*
         unsigned long long lo, hi;
         lo = _mulx_u64(x, y, &hi);
-        return ((hi << 3) | (lo >> 61)) + (lo & PRIME);
-        */
+		hi = lo % mod;
+		return hi;
+		/*
         unsigned long long hi;
         asm(
         "mov %[x_read], %%rdx;\n"
@@ -356,7 +358,7 @@ namespace virgo {
         : [x_read] "r"(x), [y_read]"r"(y), [mod_read]"r"(mod)
         : "rdx", "r9", "r10"
         );
-        return hi;
+        return hi;*/
     }
 
     unsigned long long fieldElement::randomNumber() {
@@ -482,13 +484,13 @@ namespace virgo {
         __m256i lo = _mm256_add_epi64(bd, ad_bc_sll32);
 
 
-        //return ((hi << 3) | (lo >> 61)) + (lo & PRIME);
-        return _mm256_add_epi64(_mm256_or_si256(_mm256_slli_epi64(hi, 3), _mm256_srli_epi64(lo, 61)), _mm256_and_si256(lo, packed_mod));
+        //return ((hi << 3) | (lo >> 31)) + (lo & PRIME);
+        return _mm256_add_epi64(_mm256_or_si256(_mm256_slli_epi64(hi, 3), _mm256_srli_epi64(lo, 31)), _mm256_and_si256(lo, packed_mod));
     }
 
     __m256i fieldElementPacked::packed_myMod(const __m256i x) {
-        //return (x >> 61) + (x & mod);
-        __m256i srl64 = _mm256_srli_epi64(x, 61);
+        //return (x >> 31) + (x & mod);
+        __m256i srl64 = _mm256_srli_epi64(x, 31);
         __m256i and64 = _mm256_and_si256(x, packed_mod);
         return _mm256_add_epi64(srl64, and64);
     }
