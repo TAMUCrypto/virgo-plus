@@ -12,8 +12,8 @@ using std::vector;
 using std::ostream;
 
 namespace virgo {
-#define MASK 4294967295 //2^32-1
-#define PRIME 2305843009213693951 //2^61-1
+	#define MASK 4294967295 //2^32-1
+	#define PRIME 0x1d5337fffffffL //2^31-1
 
     class fieldElementPacked;
 
@@ -91,7 +91,7 @@ namespace virgo {
         static bool isCounting;
         static bool isSumchecking;
         static const unsigned long long mod;
-        static const int __max_order = 32;
+        static const int __max_order = 31;
 
         unsigned long long real;
         unsigned long long img;

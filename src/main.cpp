@@ -16,7 +16,7 @@ using std::cerr;
 using std::endl;
 
 void test_field_arithmetic() {
-	virgo::fieldElement a, b, c, d;
+	virgo::fieldElement a, b, c, d, e;
 
 	a = fieldElement::random();
 	b = fieldElement::random();
@@ -32,7 +32,11 @@ void test_field_arithmetic() {
 	d = b * a;
 	assert(c == d);
 
-	cout << a << endl;
+	c = fieldElement::random();
+	d = (a * b) * c;
+	e = a * (b * c);
+	assert(d == e);
+
 	c = a.inv();
 	d = a * c;
 	assert(d == 1);
