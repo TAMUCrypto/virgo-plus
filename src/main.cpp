@@ -50,7 +50,7 @@ void test_field_arithmetic() {
 	d = a.sqr();
 	assert(c == d);
 
-	for (int i = 1; i < 31; i++) {
+	for (int i = 1; i < 32; i++) {
 		c = fieldElement::getRootOfUnity(i);
 		for (int j = 1; j < i; j++) {
 			c = c.sqr();
@@ -59,6 +59,23 @@ void test_field_arithmetic() {
 	}
 
 	cout << "Field tests pass. " << endl;
+
+	virgo::fieldElement *coefficients = new fieldElement[16];
+	virgo::fieldElement *result = new fieldElement[fieldElement::__max_order];
+	virgo::fieldElement *dst = new fieldElement[32];
+	for (int i = 0; i < 32; i++) {
+		coefficients[i] = fieldElement::random();
+	}
+	init_scratch_pad(fieldElement::__max_order);
+	fast_fourier_transform(coefficients, 16, fieldElement::__max_order, c = fieldElement::getRootOfUnity(0), result);
+	inverse_fast_fourier_transform(result, 16, fieldElement::__max_order, c = fieldElement::getRootOfUnity(0), dst);
+
+	for (int i = 0; i < 16; i++) {
+		cout << i << endl;
+		assert(dst[i] == coefficients[i]);
+	}
+
+	cout << "FFT tests pass. " << endl;
 
 	fieldElement::self_speed_test_add(100);
 	fieldElement::self_speed_test_mult(100);
