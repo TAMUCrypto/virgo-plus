@@ -50,7 +50,7 @@ void test_field_arithmetic() {
 	d = a.sqr();
 	assert(c == d);
 
-	for (int i = 1; i < 32; i++) {
+	for (int i = 1; i < 31; i++) {
 		c = fieldElement::getRootOfUnity(i);
 		for (int j = 1; j < i; j++) {
 			c = c.sqr();
@@ -71,7 +71,6 @@ void test_field_arithmetic() {
 	inverse_fast_fourier_transform(result, 16, fieldElement::__max_order, c = fieldElement::getRootOfUnity(0), dst);
 
 	for (int i = 0; i < 16; i++) {
-		cout << i << endl;
 		assert(dst[i] == result[i]);
 	}
 

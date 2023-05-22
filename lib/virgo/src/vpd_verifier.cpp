@@ -260,7 +260,7 @@ namespace virgo {
                         }
                         if (p_val == beta.first[j].first)
                             equ_beta = false;
-                        else
+						else
                             equ_beta = true;
                     }
 

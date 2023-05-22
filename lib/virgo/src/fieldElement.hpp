@@ -13,7 +13,7 @@ using std::ostream;
 
 namespace virgo {
 	#define MASK 4294967295 //2^32-1
-	#define PRIME 0x1d5337fffffffL //2^31-1
+	#define PRIME 0x77caf00000001L //2^31-1
 
     class fieldElementPacked;
 
@@ -84,17 +84,16 @@ namespace virgo {
         static vector<fieldElement> generateRandomness(u64 size);
         static fieldElement innerProd(vector<fieldElement>::iterator a, vector<fieldElement>::iterator b, u64 n);
 
-        static fieldElement fastPow(fieldElement x, __uint128_t p);
+        static fieldElement fastPow(fieldElement x, unsigned long long p);
 
         static bool initialized;
         static int multCounter, addCounter;
         static bool isCounting;
         static bool isSumchecking;
         static const unsigned long long mod;
-        static const int __max_order = 31;
+        static const int __max_order = 30;
 
-        unsigned long long real;
-        unsigned long long img;
+        unsigned long long elem;
 
         static double self_speed_test_mult(int repeat);
         static double self_speed_test_add(int repeat);
@@ -109,7 +108,7 @@ namespace virgo {
 
     class fieldElementPacked {
     public:
-        __m256i img, real;
+        __m256i elem;
 
         fieldElementPacked();
         fieldElementPacked(const fieldElement &x0, const fieldElement &x1, const fieldElement &x2, const fieldElement &x3);
