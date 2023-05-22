@@ -72,7 +72,7 @@ void test_field_arithmetic() {
 
 	for (int i = 0; i < 16; i++) {
 		cout << i << endl;
-		assert(dst[i] == coefficients[i]);
+		assert(dst[i] == result[i]);
 	}
 
 	cout << "FFT tests pass. " << endl;
