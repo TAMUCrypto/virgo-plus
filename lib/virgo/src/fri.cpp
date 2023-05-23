@@ -60,7 +60,7 @@ namespace virgo {
             assert(L_group[(1 << log_current_witness_size_per_slice) - 1] * root_of_unity == fieldElement(1));
         }
         //commit the witness
-        assert(sizeof(fieldElement) == 16);
+        //assert(sizeof(fieldElement) == 16);
         witness_rs_codeword_interleaved[oracle_indicator] = new fieldElement[1 << (bit_len + rs_code_rate)];
 
         const int log_leaf_size = log_slice_number + 1;
@@ -398,7 +398,7 @@ namespace virgo {
                 int c = (i) << log_leaf_size | (j << 1) | 0, d = (i) << log_leaf_size | (j << 1) | 1;
                 data_ele[0] = cpd.rs_codeword[current_step_no][c];
                 data_ele[1] = cpd.rs_codeword[current_step_no][d];
-                memcpy(&data[0], data_ele, sizeof(__hhash_digest));
+                memcpy(&data[0], data_ele, 2 * sizeof(fieldElement));
                 data[1] = htmp;
                 my_hhash(data, &htmp);
             }
@@ -406,7 +406,7 @@ namespace virgo {
             data_ele[0] = cpd.rs_codeword_msk[current_step_no][pos];
             data_ele[1] = cpd.rs_codeword_msk[current_step_no][pos | 1];
 
-            memcpy(&data[0], data_ele, sizeof(__hhash_digest));
+            memcpy(&data[0], data_ele, 2 * sizeof(fieldElement));
             data[1] = htmp;
             my_hhash(data, &htmp);
             hash_val[i] = htmp;

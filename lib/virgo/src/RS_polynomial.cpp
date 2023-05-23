@@ -27,7 +27,7 @@ namespace virgo {
                                 fieldElement *result) {
         fieldElement rot_mul[fieldElement::__max_order];
         //note: malloc and free will not call the constructor and destructor, not recommended unless for efficiency
-        assert(sizeof(fieldElement) * 2 == sizeof(__hhash_digest));
+        //assert(sizeof(fieldElement) * 2 == sizeof(__hhash_digest));
         //In sake of both memory and time efficiency, use the non-recursive version
         int lg_order = -1;
         rot_mul[0] = root_of_unity;
@@ -99,8 +99,7 @@ namespace virgo {
                             //unrolling loop
                             fieldElement sav[4];
                             if (dep == 1) {
-                                x_pack = fieldElementPacked(fieldElement(1), fieldElement(1), fieldElement(1),
-                                                            fieldElement(1));
+                                x_pack = fieldElementPacked(fieldElement(1), fieldElement(1), rot_mul[dep], rot_mul[dep]);
                                 x_multplier = fieldElementPacked(rot_mul[dep] * rot_mul[dep],
                                                                  rot_mul[dep] * rot_mul[dep],
                                                                  rot_mul[dep] * rot_mul[dep],

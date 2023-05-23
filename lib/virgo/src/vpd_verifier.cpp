@@ -28,19 +28,14 @@ namespace virgo {
             fieldElement data_ele[2];
             data_ele[0] = value[i].first;
             data_ele[1] = value[i].second;
-            memcpy(&data[0], data_ele, sizeof(__hhash_digest));
+            memcpy(&data[0], data_ele, 2 * sizeof(fieldElement));
             data[1] = value_h;
             my_hhash(data, &value_h);
-            unsigned long long *h0, *h1;
-            h0 = (unsigned long long *) &value_h.h0;
-            h1 = (unsigned long long *) &value_h.h1;
         }
         return equals(h, cur_hhash) && equals(value_h, merkle_path[len - 1]);
     }
 
-    fieldElement *mask_q_coef;
-
-//return the hhash array of commitments, randomness and final small polynomial (represented by rscode)
+	//return the hhash array of commitments, randomness and final small polynomial (represented by rscode)
     poly_commit::ldt_commitment poly_commit::poly_commit_prover::commit_phase(int log_length) {
         //Prover do the work
         std::chrono::high_resolution_clock::time_point t0 = std::chrono::high_resolution_clock::now();
@@ -153,7 +148,6 @@ namespace virgo {
                     alpha_h = fri::request_init_value_with_merkle(s0_pow, s1_pow, new_size, 1);
 
                     proof_size += new_size; //both h and p
-
                     t0 = std::chrono::high_resolution_clock::now();
                     if (!verify_merkle(merkle_tree_l, alpha_l.second, alpha_l.second.size(), min(s0_pow, s1_pow),
                                        alpha_l.first))

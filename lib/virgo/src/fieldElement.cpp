@@ -95,6 +95,7 @@ namespace virgo {
     fieldElement fieldElement::random() {
         fieldElement ret;
         ret.elem = randomNumber() % mod;
+        ret.elem = randomNumber() % mod;
         return ret;
     }
 
@@ -201,8 +202,8 @@ namespace virgo {
         fieldElement rou;
         //general root of unity, have log_order 2^30
         rou.elem = 416204888522856;
-
-        assert(log_order <= 32);
+		
+        assert(log_order < 31);
 
         for (int i = 0; i < __max_order - log_order; ++i)
             rou = rou * rou;
